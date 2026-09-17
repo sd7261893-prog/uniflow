@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFlow - Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f3ff;
+            color: #222;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, #4c1d95, #7c3aed);
+            color: white;
+            padding: 25px 15px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 14px 15px;
+            margin: 7px 0;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 15px;
+            right: 15px;
+        }
+
+        .logout a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 13px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 10px;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 35px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            color: #3b0764;
+        }
+
+        .welcome p {
+            color: #666;
+            margin-top: 7px;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 25px;
+            font-weight: bold;
+            color: #4c1d95;
+        }
+
+        .section-title {
+            margin: 35px 0 15px;
+            color: #3b0764;
+        }
+
+        /* QUICK ACTIONS */
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .action {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #222;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: 0.3s;
+        }
+
+        .action:hover {
+            transform: translateY(-4px);
+        }
+
+        .action .emoji {
+            font-size: 30px;
+        }
+
+        .action h3 {
+            margin-top: 12px;
+            color: #4c1d95;
+        }
+
+        .action p {
+            margin-top: 6px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* TODAY */
+        .today {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .today-box {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .today-box h2 {
+            color: #4c1d95;
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            height: 13px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: #7c3aed;
+            transition: 0.5s;
+        }
+
+        .small-text {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 1000px) {
+            .cards,
+            .actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .menu a {
+                display: inline-block;
+                padding: 9px;
+            }
+
+            .logout {
+                position: static;
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+
+            .cards,
+            .actions,
+            .today {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🌐 UniFlow
+        </div>
+
+        <div class="menu">
+
+            <a href="dashboard.html" class="active">
+                🏠 Dashboard
+            </a>
+
+            <a href="budget.html">
+                💰 Budget
+            </a>
+
+            <a href="study.html">
+                📚 Study Hours
+            </a>
+
+            <a href="fitness.html">
+                🏃 Fitness
+            </a>
+
+            <a href="sleep.html">
+                😴 Sleep
+            </a>
+
+        </div>
+
+        <div class="logout">
+            <a href="index.html">
+                🚪 Logout
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <div class="welcome">
+            <h1>Welcome to UniFlow 👋</h1>
+            <p>Manage your student life from one place.</p>
+        </div>
+
+
+        <!-- STAT CARDS -->
+        <div class="cards">
+
+            <div class="card stat-card">
+                <div class="icon">💰</div>
+                <h3>Remaining Budget</h3>
+                <div class="value" id="remainingBudget">₹0</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="icon">📚</div>
+                <h3>Study Today</h3>
+                <div class="value" id="studyToday">0 hrs</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="icon">🏃</div>
+                <h3>Steps Today</h3>
+                <div class="value" id="stepsToday">0</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="icon">😴</div>
+                <h3>Sleep Today</h3>
+                <div class="value" id="sleepToday">0 hrs</div>
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+        <h2 class="section-title">Quick Actions</h2>
+
+        <div class="actions">
+
+            <a href="budget.html" class="action">
+                <div class="emoji">💰</div>
+                <h3>Track Budget</h3>
+                <p>Manage your monthly expenses.</p>
+            </a>
+
+            <a href="study.html" class="action">
+                <div class="emoji">📚</div>
+                <h3>Study Planner</h3>
+                <p>Track your study hours.</p>
+            </a>
+
+            <a href="fitness.html" class="action">
+                <div class="emoji">🏃</div>
+                <h3>Fitness</h3>
+                <p>Track steps, workouts and water.</p>
+            </a>
+
+            <a href="sleep.html" class="action">
+                <div class="emoji">😴</div>
+                <h3>Sleep Cycle</h3>
+                <p>Monitor your sleep routine.</p>
+            </a>
+
+        </div>
+
+
+        <!-- TODAY'S PROGRESS -->
+        <h2 class="section-title">Today's Progress</h2>
+
+        <div class="today">
+
+            <div class="today-box">
+
+                <h2>📚 Study</h2>
+
+                <p>
+                    <strong id="studyProgressText">0 hrs</strong>
+                    studied today
+                </p>
+
+                <div class="progress-container">
+                    <div class="progress" id="studyProgress"></div>
+                </div>
+
+                <p class="small-text" style="margin-top:10px;">
+                    Daily goal:
+                    <span id="studyGoal">0 hrs</span>
+                </p>
+
+            </div>
+
+
+            <div class="today-box">
+
+                <h2>🏃 Fitness</h2>
+
+                <p>
+                    <strong id="fitnessProgressText">0</strong>
+                    steps today
+                </p>
+
+                <div class="progress-container">
+                    <div class="progress" id="fitnessProgress"></div>
+                </div>
+
+                <p class="small-text" style="margin-top:10px;">
+                    Step goal:
+                    <span id="stepGoal">0</span>
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+function updateDashboard() {
+
+    /* =========================
+       BUDGET
+    ========================= */
+
+    const budget =
+        Number(localStorage.getItem("uniflowBudget")) || 0;
+
+    const expenses =
+        JSON.parse(
+            localStorage.getItem("uniflowExpenses")
+        ) || [];
+
+    let totalExpenses = 0;
+
+    expenses.forEach(function(expense) {
+        totalExpenses += Number(expense.amount) || 0;
+    });
+
+    const remaining = budget - totalExpenses;
+
+    document.getElementById("remainingBudget").textContent =
+        "₹" + remaining.toLocaleString("en-IN");
+
+
+    /* =========================
+       STUDY
+    ========================= */
+
+    const studied =
+        Number(localStorage.getItem("uniflowStudied")) || 0;
+
+    const studyGoal =
+        Number(localStorage.getItem("uniflowStudyGoal")) || 0;
+
+    document.getElementById("studyToday").textContent =
+        studied + " hrs";
+
+    document.getElementById("studyProgressText").textContent =
+        studied + " hrs";
+
+    document.getElementById("studyGoal").textContent =
+        studyGoal + " hrs";
+
+    let studyPercent = 0;
+
+    if (studyGoal > 0) {
+        studyPercent = (studied / studyGoal) * 100;
+    }
+
+    if (studyPercent > 100) {
+        studyPercent = 100;
+    }
+
+    document.getElementById("studyProgress").style.width =
+        studyPercent + "%";
+
+
+    /* =========================
+       FITNESS
+    ========================= */
+
+    const steps =
+        Number(localStorage.getItem("uniflowSteps")) || 0;
+
+    const stepGoal =
+        Number(localStorage.getItem("uniflowStepGoal")) || 0;
+
+    document.getElementById("stepsToday").textContent =
+        steps.toLocaleString("en-IN");
+
+    document.getElementById("fitnessProgressText").textContent =
+        steps.toLocaleString("en-IN");
+
+    document.getElementById("stepGoal").textContent =
+        stepGoal.toLocaleString("en-IN");
+
+    let fitnessPercent = 0;
+
+    if (stepGoal > 0) {
+        fitnessPercent = (steps / stepGoal) * 100;
+    }
+
+    if (fitnessPercent > 100) {
+        fitnessPercent = 100;
+    }
+
+    document.getElementById("fitnessProgress").style.width =
+        fitnessPercent + "%";
+
+
+    /* =========================
+       SLEEP
+    ========================= */
+
+    const sleep =
+        Number(localStorage.getItem("uniflowSleepHours")) || 0;
+
+    document.getElementById("sleepToday").textContent =
+        sleep + " hrs";
+}
+
+
+/* Load dashboard */
+updateDashboard();
+
+
+/* Update dashboard when localStorage changes */
+window.addEventListener("storage", updateDashboard);
+
+</script>
+
+</body>
+</html>

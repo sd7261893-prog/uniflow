@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>UniFlow - Fitness</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #222;
+        }
+
+        /* HEADER */
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+
+            padding: 20px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        .back {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+
+        /* MAIN */
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        /* SUMMARY */
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .summary-card h3 {
+            color: #777;
+
+            font-size: 15px;
+
+            margin-bottom: 10px;
+        }
+
+        .summary-card h2 {
+            font-size: 28px;
+        }
+
+
+        /* SECTION */
+
+        .section {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 16px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+        }
+
+
+        /* INPUTS */
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        input:focus,
+        select:focus {
+
+            outline: none;
+
+            border-color: #667eea;
+        }
+
+
+        /* BUTTON */
+
+        button {
+
+            border: none;
+
+            background: #667eea;
+
+            color: white;
+
+            padding: 12px 20px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        button:hover {
+
+            background: #5568d9;
+        }
+
+
+        /* STEPS */
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 15px;
+
+            background: #eee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+
+            height: 100%;
+
+            width: 0%;
+
+            background: #667eea;
+
+            transition: 0.4s;
+        }
+
+        .progress-text {
+
+            margin-top: 8px;
+
+            color: #777;
+        }
+
+
+        /* ACTIVITY */
+
+        .activity {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid #eee;
+        }
+
+        .activity:last-child {
+
+            border-bottom: none;
+        }
+
+        .activity-info strong {
+
+            display: block;
+
+            margin-bottom: 5px;
+        }
+
+        .activity-info small {
+
+            color: #777;
+        }
+
+        .delete-btn {
+
+            background: #ff5c5c;
+
+            padding: 8px 12px;
+
+            font-size: 13px;
+        }
+
+        .delete-btn:hover {
+
+            background: #e04444;
+        }
+
+
+        /* WATER */
+
+        .water-glasses {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 15px;
+        }
+
+        .glass {
+
+            width: 45px;
+
+            height: 55px;
+
+            background: #eee;
+
+            border-radius: 8px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            cursor: pointer;
+
+            font-size: 22px;
+
+            transition: 0.2s;
+        }
+
+        .glass.active {
+
+            background: #667eea;
+
+            color: white;
+        }
+
+
+        .empty {
+
+            color: #777;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            .summary {
+
+                grid-template-columns: 1fr;
+            }
+
+            .activity {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 12px;
+            }
+
+            header {
+
+                padding: 18px;
+            }
+
+            header h1 {
+
+                font-size: 20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<header>
+
+    <h1>
+        🏃 UniFlow Fitness
+    </h1>
+
+    <a
+        href="dashboard.html"
+        class="back"
+    >
+        ← Dashboard
+    </a>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+
+        <div class="summary-card">
+
+            <h3>
+                Steps
+            </h3>
+
+            <h2 id="stepsDisplay">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                Workout Minutes
+            </h3>
+
+            <h2 id="workoutDisplay">
+                0 min
+            </h2>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <h3>
+                Water
+            </h3>
+
+            <h2 id="waterDisplay">
+                0 / 8
+            </h2>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- STEP GOAL -->
+
+    <div class="section">
+
+        <h2>
+            Daily Step Goal
+        </h2>
+
+
+        <input
+            type="number"
+            id="stepGoal"
+            placeholder="Step goal e.g. 8000"
+            min="1"
+        >
+
+
+        <input
+            type="number"
+            id="stepsInput"
+            placeholder="Steps completed"
+            min="0"
+        >
+
+
+        <button onclick="saveSteps()">
+            Save Steps
+        </button>
+
+
+        <div class="progress-bar">
+
+            <div
+                class="progress-fill"
+                id="stepProgress"
+            ></div>
+
+        </div>
+
+
+        <p
+            class="progress-text"
+            id="stepProgressText"
+        >
+            0 steps completed
+        </p>
+
+    </div>
+
+
+
+    <!-- ADD WORKOUT -->
+
+    <div class="section">
+
+        <h2>
+            Add Workout
+        </h2>
+
+
+        <select id="activityType">
+
+            <option value="">
+                Select Activity
+            </option>
+
+            <option value="Walking">
+                Walking
+            </option>
+
+            <option value="Running">
+                Running
+            </option>
+
+            <option value="Gym">
+                Gym
+            </option>
+
+            <option value="Cycling">
+                Cycling
+            </option>
+
+            <option value="Yoga">
+                Yoga
+            </option>
+
+            <option value="Sports">
+                Sports
+            </option>
+
+        </select>
+
+
+        <input
+            type="number"
+            id="workoutMinutes"
+            placeholder="Duration in minutes"
+            min="1"
+        >
+
+
+        <button onclick="addWorkout()">
+            + Add Workout
+        </button>
+
+    </div>
+
+
+
+    <!-- ACTIVITY HISTORY -->
+
+    <div class="section">
+
+        <h2>
+            Activity History
+        </h2>
+
+
+        <div id="activityList">
+        </div>
+
+    </div>
+
+
+
+    <!-- WATER -->
+
+    <div class="section">
+
+        <h2>
+            💧 Water Intake
+        </h2>
+
+        <p>
+            Click a glass to mark your water intake.
+        </p>
+
+
+        <div
+            class="water-glasses"
+            id="waterGlasses"
+        >
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================
+       LOAD SAVED DATA
+    ========================= */
+
+
+    let steps =
+        Number(
+            localStorage.getItem(
+                "uniflowSteps"
+            )
+        ) || 0;
+
+
+    let stepGoal =
+        Number(
+            localStorage.getItem(
+                "uniflowStepGoal"
+            )
+        ) || 8000;
+
+
+    let workout =
+        Number(
+            localStorage.getItem(
+                "uniflowWorkout"
+            )
+        ) || 0;
+
+
+    let water =
+        Number(
+            localStorage.getItem(
+                "uniflowWater"
+            )
+        ) || 0;
+
+
+    let activities =
+        JSON.parse(
+            localStorage.getItem(
+                "uniflowActivities"
+            )
+        ) || [];
+
+
+
+    /* =========================
+       SAVE DATA
+    ========================= */
+
+
+    function saveData() {
+
+        localStorage.setItem(
+            "uniflowSteps",
+            steps
+        );
+
+        localStorage.setItem(
+            "uniflowStepGoal",
+            stepGoal
+        );
+
+        localStorage.setItem(
+            "uniflowWorkout",
+            workout
+        );
+
+        localStorage.setItem(
+            "uniflowWater",
+            water
+        );
+
+        localStorage.setItem(
+            "uniflowActivities",
+            JSON.stringify(activities)
+        );
+    }
+
+
+
+    /* =========================
+       SAVE STEPS
+    ========================= */
+
+
+    function saveSteps() {
+
+        const goalValue =
+            Number(
+                document.getElementById(
+                    "stepGoal"
+                ).value
+            );
+
+
+        const stepsValue =
+            Number(
+                document.getElementById(
+                    "stepsInput"
+                ).value
+            );
+
+
+        if (goalValue <= 0) {
+
+            alert(
+                "Please enter a valid step goal."
+            );
+
+            return;
+        }
+
+
+        if (stepsValue < 0) {
+
+            alert(
+                "Steps cannot be negative."
+            );
+
+            return;
+        }
+
+
+        stepGoal = goalValue;
+
+        steps = stepsValue;
+
+
+        saveData();
+
+        updateDisplay();
+
+
+        document.getElementById(
+            "stepGoal"
+        ).value = "";
+
+        document.getElementById(
+            "stepsInput"
+        ).value = "";
+    }
+
+
+
+    /* =========================
+       ADD WORKOUT
+    ========================= */
+
+
+    function addWorkout() {
+
+        const type =
+            document.getElementById(
+                "activityType"
+            ).value;
+
+
+        const minutes =
+            Number(
+                document.getElementById(
+                    "workoutMinutes"
+                ).value
+            );
+
+
+        if (!type || minutes <= 0) {
+
+            alert(
+                "Please select an activity and enter duration."
+            );
+
+            return;
+        }
+
+
+        activities.push({
+
+            id: Date.now(),
+
+            type: type,
+
+            minutes: minutes
+
+        });
+
+
+        workout += minutes;
+
+
+        saveData();
+
+
+        document.getElementById(
+            "activityType"
+        ).value = "";
+
+
+        document.getElementById(
+            "workoutMinutes"
+        ).value = "";
+
+
+        updateDisplay();
+
+        displayActivities();
+    }
+
+
+
+    /* =========================
+       DELETE WORKOUT
+    ========================= */
+
+
+    function deleteActivity(id) {
+
+        const activity =
+            activities.find(
+                item => item.id === id
+            );
+
+
+        if (activity) {
+
+            workout -=
+                Number(activity.minutes);
+
+            if (workout < 0) {
+
+                workout = 0;
+            }
+        }
+
+
+        activities =
+            activities.filter(
+                item => item.id !== id
+            );
+
+
+        saveData();
+
+        updateDisplay();
+
+        displayActivities();
+    }
+
+
+
+    /* =========================
+       DISPLAY ACTIVITIES
+    ========================= */
+
+
+    function displayActivities() {
+
+        const list =
+            document.getElementById(
+                "activityList"
+            );
+
+
+        if (activities.length === 0) {
+
+            list.innerHTML =
+                '<div class="empty">No workouts added yet.</div>';
+
+            return;
+        }
+
+
+        list.innerHTML = "";
+
+
+        activities
+            .slice()
+            .reverse()
+            .forEach(activity => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "activity";
+
+
+                div.innerHTML = `
+
+                    <div class="activity-info">
+
+                        <strong>
+                            ${escapeHTML(activity.type)}
+                        </strong>
+
+                        <small>
+                            ${activity.minutes} minutes
+                        </small>
+
+                    </div>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteActivity(${activity.id})"
+                    >
+                        Delete
+                    </button>
+
+                `;
+
+
+                list.appendChild(div);
+
+            });
+    }
+
+
+
+    /* =========================
+       WATER
+    ========================= */
+
+
+    function createWaterGlasses() {
+
+        const container =
+            document.getElementById(
+                "waterGlasses"
+            );
+
+
+        container.innerHTML = "";
+
+
+        for (
+            let i = 1;
+            i <= 8;
+            i++
+        ) {
+
+            const glass =
+                document.createElement(
+                    "div"
+                );
+
+
+            glass.className =
+                "glass";
+
+
+            if (i <= water) {
+
+                glass.classList.add(
+                    "active"
+                );
+            }
+
+
+            glass.textContent = "💧";
+
+
+            glass.onclick =
+                function() {
+
+                    water = i;
+
+                    saveData();
+
+                    updateDisplay();
+
+                    createWaterGlasses();
+                };
+
+
+            container.appendChild(
+                glass
+            );
+        }
+    }
+
+
+
+    /* =========================
+       UPDATE DISPLAY
+    ========================= */
+
+
+    function updateDisplay() {
+
+
+        document.getElementById(
+            "stepsDisplay"
+        ).textContent =
+            steps.toLocaleString(
+                "en-IN"
+            );
+
+
+        document.getElementById(
+            "workoutDisplay"
+        ).textContent =
+            workout + " min";
+
+
+        document.getElementById(
+            "waterDisplay"
+        ).textContent =
+            water + " / 8";
+
+
+        let progress = 0;
+
+
+        if (stepGoal > 0) {
+
+            progress =
+                Math.round(
+                    (steps / stepGoal) * 100
+                );
+        }
+
+
+        if (progress > 100) {
+
+            progress = 100;
+        }
+
+
+        document.getElementById(
+            "stepProgress"
+        ).style.width =
+            progress + "%";
+
+
+        document.getElementById(
+            "stepProgressText"
+        ).textContent =
+
+            steps.toLocaleString(
+                "en-IN"
+            )
+            +
+            " / "
+            +
+            stepGoal.toLocaleString(
+                "en-IN"
+            )
+            +
+            " steps (" +
+            progress +
+            "%)";
+    }
+
+
+
+    /* =========================
+       SECURITY
+    ========================= */
+
+
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.textContent = text;
+
+        return div.innerHTML;
+    }
+
+
+
+    /* =========================
+       INITIAL LOAD
+    ========================= */
+
+
+    updateDisplay();
+
+    displayActivities();
+
+    createWaterGlasses();
+
+
+</script>
+
+
+</body>
+
+</html>
